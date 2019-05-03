@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, send_from_directory, redirect, url_for, jsonify
+from flask import Flask, render_template, request, redirect, url_for, abort
 import requests
 
 app = Flask(__name__)
@@ -8,42 +8,26 @@ app = Flask(__name__)
 def home():
     return render_template('home.html')
 
-# search route
+# search post route
 @app.route('/post', methods = ['POST'])
 def post():
-    url_base = 'https://pokeapi.co/api/v2/pokemon/'
-    database = requests.get(url_base)
-    list_pokemons = database.json()['results']
     pokemon = request.form['nama_pokemon']
+    return redirect(url_for('hasil', nama = pokemon))
 
-    i = 0
-    while i <= len(list_pokemons)-1:
-        if pokemon in list_pokemons[i]['name']:
-            return redirect(url_for('hasil', nama = pokemon))
-        # else: still can't figure out how to go to the next page
-        #     i += 1
-        #     limit = 20
-        #     url_next = 'https://pokeapi.co/api/v2/pokemon/?offset='+limit+'&limit=20'
-        #     database_next = requests.get(url_next)
-        #     list_pokemons_next = database_next.json()['results']
-            
-        #     j = 0
-        #     while j <= len(list_pokemons_next):
-        #         if pokemon in list_pokemons[j]['name']:
-        #             return redirect(url_for('hasil', nama = pokemon))
-        #         else:
-        #             j += 1
-        #             limit += 20
-        elif i == len(list_pokemons)-1:
-            return render_template('error.html')
-        else:
-            i += 1
-
+# show result route if success
 @app.route('/hasil/<string:nama>')
 def hasil(nama):
     url = 'https://pokeapi.co/api/v2/pokemon/'+nama
     pokemons = requests.get(url)
-    return render_template('hasil.html', x = pokemons)
+    if str(pokemons) == '<Response [404]>':
+        abort(404)
+    else:
+        return render_template('hasil.html', x = pokemons)
+
+# show error not found
+@app.errorhandler(404)
+def error(error):
+    return render_template('error.html')
 
 if __name__ == '__main__':
     app.run(debug = True)
