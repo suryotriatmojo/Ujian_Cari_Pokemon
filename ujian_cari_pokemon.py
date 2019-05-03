@@ -12,6 +12,7 @@ def home():
 @app.route('/post', methods = ['POST'])
 def post():
     pokemon = request.form['nama_pokemon']
+    pokemon = pokemon.lower()
     return redirect(url_for('hasil', nama = pokemon))
 
 # show result route if success
