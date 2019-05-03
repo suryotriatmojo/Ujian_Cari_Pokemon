@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Find Pokemon</title>
+</head>
+<body>
+    <center>
+        <h1>Nama: {{x.json()['name']}}</h1>
+        <img src= "{{x.json()['sprites']['front_default']}}" alt="gambar">
+        <h3>id: {{x.json()['id']}}</h3>
+        <h3>tinggi: {{x.json()['height']}}</h3>
+        <h3>berat: {{x.json()['weight']}}</h3>
+
+        <form action="http://127.0.0.1:5000">
+            <input type="submit" value="Kembali">
+        </form>
+    </center>
+</body>
+</html>
